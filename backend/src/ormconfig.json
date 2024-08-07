@@ -1,0 +1,10 @@
+{
+    "type": "postgres",
+    "host": "aws-0-sa-east-1.pooler.supabase.com",
+    "port": 6543,
+    "username": "postgres.fzgxtzzvyrchuvuqjbzx",
+    "password": "Ds@048406#23",
+    "database": "postgres",
+    "entities": ["dist/**/*.entity{.ts,.js}"],
+    "synchronize": true
+}
