@@ -21,7 +21,8 @@
     "typeorm": "npm run build && npx typeorm -d dist/common/database/database.provider.js",
     "migration:run": "npm run typeorm -- migration:run",
     "migration:rollback": "npm run typeorm -- migration:revert",
-    "migration:show": "npm run typeorm -- migration:show"
+    "migration:show": "npm run typeorm -- migration:show",
+    "heroku-postbuild": "NODE_ENV=dev npm install --omit --no-shrinkwrap && npm run build"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
