@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Logger, Param, Post } from '@nestjs/common';
 import { User } from 'src/common/database/entities/user';
 import { UserService } from '../services/user.service';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -9,7 +10,12 @@ export class UserController {
 
     @Get()
     findAll(): Promise<User[]> {
-        return this.userService.findAll();
+        try {
+            return this.userService.findAll();
+        }
+        catch (error) {
+            this.logger.error("problemas em carregar os usuários", error);
+        }
     }
 
     @Get(':id')
@@ -18,21 +24,17 @@ export class UserController {
     }
 
     @Post()
-    async create(@Body() user: User): Promise<User> {
-        try {
-            await this.userService.create(user);
-            return user;
-        } catch (error) {
-            this.logger.error(`Falha em criar usuário`, error.stack);
-            throw error;
-        }
+    async create(@Body() data: CreateUserDto): Promise<User> {
+        return this.userService.create(data);
     }
 
     @Delete(':id')
-    async remove(@Param('id') id: string): Promise<string> {
+    async remove(@Param('id') id: string): Promise<any> {
         try {
             await this.userService.remove(+id);
-            return "Usuário removido com sucesso"
+            return {
+                message: "Usuário removido com sucesso"
+            }
         }
         catch (error) {
             this.logger.error(`Falha em deletar usuário`, error.stack);

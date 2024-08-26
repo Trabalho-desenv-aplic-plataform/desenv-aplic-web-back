@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { hashSync } from 'bcrypt';
 @Entity({name: "usuario"})
+@Unique(['email'])
 export class User {
 
     @PrimaryGeneratedColumn({name: "USR_Id"})
@@ -17,4 +18,9 @@ export class User {
 
     @Column({name: "USR_TipoUsuario"})
     tipo: string;
+
+    @BeforeInsert() // Antes do typeorm inserir um novo usuário no bd, vai executar essa função
+    hashPassword() {
+        this.senha = hashSync(this.senha, 10);
+    }
 }
