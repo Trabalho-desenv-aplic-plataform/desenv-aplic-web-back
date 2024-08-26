@@ -1,7 +1,7 @@
-import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/common/database/entities/user';
-import { FindOptions, Repository } from 'typeorm';
+import { FindOneOptions, FindOptions, Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 // import { User } from './user.entity';
 
@@ -23,9 +23,14 @@ export class UserService {
         return this.userRepository.findOneBy({ id });
     }
 
-    // async findOneOrFail(conditions: FindConditions<User>) {
-
-    // }
+    async findOneOrFail(options: FindOneOptions<User>) {
+        try {
+            return await this.userRepository.findOneOrFail(options)
+        }
+        catch (error) {
+            throw new NotFoundException(error.message);
+        }
+    }
 
     async create(data: CreateUserDto): Promise<User> {
         try {
