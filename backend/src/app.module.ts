@@ -3,11 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './common/database/database.module';
 import { UserModule } from './user/modules/user.module';
+import { GruposModule } from './grupos/modules/grupos.module';
+import { GruposController } from './grupos/controllers/grupos.controller';
 
 @Module({
   imports: [
     DatabaseModule,
     UserModule,
+    GruposModule,
   ],
   controllers: [AppController],
   providers: [AppService],
