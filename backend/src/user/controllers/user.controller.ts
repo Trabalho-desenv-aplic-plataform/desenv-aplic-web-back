@@ -23,7 +23,7 @@ export class UserController {
             await this.userService.create(user);
             return user;
         } catch (error) {
-            this.logger.error(`Falha em criar usuário`, error.stack);
+            this.logger.error(`Falha em criar `, error.stack);
             throw error;
         }
     }
