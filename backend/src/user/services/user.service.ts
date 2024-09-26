@@ -11,8 +11,16 @@ export class UserService {
         private readonly userRepository: Repository<User>
     ) {}
 
+    async findByEmail(userEmail: string): Promise<User> {
+        return await this.userRepository.findOne({
+            where: { email: userEmail }
+        });
+    }
+
     findAll(): Promise<User[]> {
-        return this.userRepository.find();
+        return this.userRepository.find({
+            select: ['nome', 'email', 'tipo']
+        });
     }
 
     findOne(id: number): Promise<User> {
