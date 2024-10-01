@@ -12,6 +12,16 @@ export class GruposController {
         return this.grupoService.findAll();
     }
 
+    @Get(':id')
+    findOne(@Param('id') id: string): Promise<Grupos> {
+        return this.grupoService.findOne(+id);
+    }
+
+    @Delete('id')
+    async remove(@Param('id') id: string): Promise<void> {
+        return await this.grupoService.remove(+id);
+    }
+
     @Post()
     async create(@Body() grupos: Grupos): Promise<Grupos>{
         try{
