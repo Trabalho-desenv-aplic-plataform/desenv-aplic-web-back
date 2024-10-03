@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, Timestamp } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, Timestamp, OneToMany } from "typeorm";
+import { Contatos } from './contatos'; 
 
 @Entity({name: "grupos"})
 export class Grupos{
@@ -14,5 +15,8 @@ export class Grupos{
     
     @Column({name: "GRU_Cor"})
     cor: string;
+
+    @OneToMany(() => Contatos, (contato) => contato.grupoId)
+    contatos: Contatos[];
 
 }
