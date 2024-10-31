@@ -5,7 +5,7 @@ export class Contatos1724973619552 implements MigrationInterface {
     private tableName = "contatos";
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        queryRunner.createTable(new Table({
+        await queryRunner.createTable(new Table({
             name: this.tableName,
             columns: [
                 {
@@ -36,6 +36,12 @@ export class Contatos1724973619552 implements MigrationInterface {
                 {
                     name: "CON_GrupoId",
                     type: "int"
+                },
+                {
+                    name: "CON_ChatId",
+                    type: "varchar",
+                    length: "50",
+                    isNullable: true
                 }
             ],
             foreignKeys: [
@@ -46,11 +52,10 @@ export class Contatos1724973619552 implements MigrationInterface {
                     onDelete: "CASCADE"
                 }
             ]
-        }))    
+        }));
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        queryRunner.query("DROP TABLE " + this.tableName)
+        await queryRunner.query("DROP TABLE " + this.tableName);
     }
-
 }
