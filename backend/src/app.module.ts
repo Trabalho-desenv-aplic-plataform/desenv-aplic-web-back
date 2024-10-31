@@ -7,6 +7,7 @@ import { GruposModule } from './grupos/modules/grupos.module';
 import { GruposController } from './grupos/controllers/grupos.controller';
 import { AuthModule } from './auth/modules/auth.module';
 import { ContatosModule } from './contatos/module/contatos.module';
+import { BotModule } from './bot/bot.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ContatosModule } from './contatos/module/contatos.module';
     UserModule,
     GruposModule,
     ContatosModule,
+    BotModule,
     AuthModule
   ],
   controllers: [AppController],

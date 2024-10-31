@@ -15,6 +15,9 @@ export class Contatos {
     @Column({ name: "CON_Status", default: true })
     status: boolean;
 
-    @Column({ name: "CON_GrupoId" }) // Adicione esta linha
-    grupoId: number; // ou o tipo que você preferir, geralmente int
+    @Column({ name: "CON_GrupoId" })
+    grupoId: number; 
+
+    @Column({ name: "CON_ChatId", nullable: true })
+    chatId?: string; 
 }
