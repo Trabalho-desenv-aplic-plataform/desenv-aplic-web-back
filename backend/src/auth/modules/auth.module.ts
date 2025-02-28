@@ -3,16 +3,18 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/user/modules/user.module';
 import { jwtConstants } from '../constants/constants';
 import { AuthController } from '../controllers/auth.controller';
+import { PassportModule } from '@nestjs/passport';
 import { AuthService } from '../services/auth/auth.service';
+
 
 @Module({
     imports: [
         UserModule,
+        PassportModule,
         JwtModule.register({
-            global: true,
-            secret: jwtConstants.secret,
-            signOptions: { expiresIn: '60s' }
-        })
+          secret: 'sua-chave-secreta', // Trocar por uma chave forte
+          signOptions: { expiresIn: '1h' },
+        }),
     ],
     controllers: [AuthController],
     providers: [AuthService],
