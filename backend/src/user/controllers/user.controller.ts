@@ -105,4 +105,18 @@ export class UserController {
             throw new BadRequestException('Erro ao remover usuário');
         }
     }
+
+    @Post('esqueci-senha')
+    async solicitarRecuperacao(@Body('email') email: string) {
+        return this.userService.solicitarRecuperacaoSenha(email);
+    }
+
+    @Post('redefinir-senha')
+    async redefinirSenha(
+        @Body('token') token: string,
+        @Body('novaSenha') novaSenha: string
+    ) {
+        return this.userService.redefinirSenha(token, novaSenha);
+    }
+
 }

@@ -17,4 +17,11 @@ export class User {
 
     @Column({name: "USR_TipoUsuario"})
     tipo: string;
+
+    @Column({ nullable: true })
+    resetToken?: string;
+
+    // Novo campo: Expiração do token
+    @Column({ type: "timestamp", nullable: true })
+    resetTokenExpires?: Date;
 }
