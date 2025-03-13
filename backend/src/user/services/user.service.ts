@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/common/database/entities/user';
 import { Repository } from 'typeorm';
@@ -13,7 +13,10 @@ export class UserService {
     ) {}
 
     async findByEmail(email: string): Promise<User | undefined> {
-        return this.userRepository.findOne({ where: { email } });
+        return this.userRepository.findOne({
+            where: { email },
+            select: ['id', 'nome', 'email', 'senha'], // Garante que a senha é retornada
+        });
     }
 
     findAll(): Promise<User[]> {
@@ -26,37 +29,24 @@ export class UserService {
         return this.userRepository.findOneBy({ id });
     }
 
-    create(user: User): Promise<User> {
+    async create(user: User): Promise<User> {
+        // Verifica se o usuário já existe
+        const usuarioExiste = await this.userRepository.findOne({ where: { email: user.email } });
+    
+        if (usuarioExiste) {
+            throw new BadRequestException('Email já cadastrado!');
+        }
+    
         return this.userRepository.save(user);
     }
 
-    async createUser(nome: string, email: string, senha: string): Promise<User> {
-        const salt = await bcrypt.genSalt(10);
-        const senhaCriptografada = await bcrypt.hash(senha, salt);
-        
-        const newUser = this.userRepository.create({ nome, email, senha: senhaCriptografada });
-        return this.userRepository.save(newUser);
-    }
+    async remove(id: number): Promise<void> {
+        const user = await this.userRepository.findOne({ where: { id } });
     
-    async cadastrar(dados: { nome: string; email: string; senha: string }): Promise<User> {
-        const usuarioExiste = await this.userRepository.findOne({ where: { email: dados.email } });
-    
-        if (usuarioExiste) {
-          throw new Error('Email já cadastrado!');
+        if (!user) {
+            throw new NotFoundException('Usuário não encontrado');
         }
     
-        const salt = await bcrypt.genSalt(10);
-        const senhaCriptografada = await bcrypt.hash(dados.senha, salt);
-    
-        const novoUsuario = this.userRepository.create({
-          nome: dados.nome,
-          email: dados.email,
-          senha: senhaCriptografada,
-        });
-    
-        return await this.userRepository.save(novoUsuario);
-      }
-    async remove(id: number): Promise<void> {
         await this.userRepository.delete(id);
     }
 }

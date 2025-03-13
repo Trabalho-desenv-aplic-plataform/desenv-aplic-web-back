@@ -12,7 +12,7 @@ import { AuthService } from '../services/auth/auth.service';
         UserModule,
         PassportModule,
         JwtModule.register({
-          secret: 'sua-chave-secreta', // Trocar por uma chave forte
+          secret: 'MySecretKey', 
           signOptions: { expiresIn: '1h' },
         }),
     ],
