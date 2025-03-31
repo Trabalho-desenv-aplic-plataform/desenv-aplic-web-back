@@ -16,7 +16,7 @@ export class UserController {
     @Get('perfil')
     @UseGuards(JwtAuthGuard)
     getProfile(@Req() req) {
-        return req.user; // Retorna os dados do usuário autenticado
+        return req.user; 
     } 
 
     /**
@@ -45,10 +45,7 @@ export class UserController {
         return user;
     }
 
-    /**
-     * Cadastro de usuário com documentação no Swagger
-     */
-    
+
     @Post('cadastrar')
     @ApiOperation({ summary: 'Criar um novo usuário' })
     @ApiResponse({ status: 201, description: 'Usuário criado com sucesso.', type: User })
@@ -66,16 +63,16 @@ export class UserController {
     })
     async create(@Body() dados: { nome: string; email: string; senha: string; tipo?: string }): Promise<User> {
         try {
-            // Hash da senha
+
             const senhaHash = await bcrypt.hash(dados.senha, 10);
-            console.log("Senha gerada para o banco:", senhaHash); // Debug
+            console.log("Senha gerada para o banco:", senhaHash); 
     
-            // Criar usuário garantindo compatibilidade com a entidade User
+            
             const novoUsuario = Object.assign(new User(), {
                 nome: dados.nome,
                 email: dados.email,
                 senha: senhaHash, 
-                tipo: dados.tipo ?? 'user' // Define um valor padrão se não for passado
+                tipo: dados.tipo ?? 'user' 
             });
     
             return await this.userService.create(novoUsuario);
@@ -85,11 +82,6 @@ export class UserController {
         }
     }
     
-
-
-    /**
-     * Remove um usuário pelo ID
-     */
     @Delete(':id')
     async remove(@Param('id') id: string): Promise<string> {
         const userId = parseInt(id, 10);
@@ -107,16 +99,38 @@ export class UserController {
     }
 
     @Post('esqueci-senha')
+    @ApiOperation({ summary: 'Solicitar recuperação de senha' })
+    @ApiBody({
+        schema: {
+        type: 'object',
+        properties: {
+            email: { type: 'string', example: 'usuario@email.com' },
+        },
+        },
+    })
+    @ApiResponse({ status: 200, description: 'E-mail enviado com sucesso' })
+    @ApiResponse({ status: 400, description: 'Usuário não encontrado' })
     async solicitarRecuperacao(@Body('email') email: string) {
         return this.userService.solicitarRecuperacaoSenha(email);
     }
 
     @Post('redefinir-senha')
+    @ApiOperation({ summary: 'Redefinir senha usando um token' })
+    @ApiBody({
+      schema: {
+        type: 'object',
+        properties: {
+          token: { type: 'string', example: '1234567890abcdef' },
+          novaSenha: { type: 'string', example: 'NovaSenha@123' },
+        },
+      },
+    })
+    @ApiResponse({ status: 200, description: 'Senha redefinida com sucesso' })
+    @ApiResponse({ status: 400, description: 'Token inválido ou expirado' })
     async redefinirSenha(
-        @Body('token') token: string,
-        @Body('novaSenha') novaSenha: string
+      @Body('token') token: string,
+      @Body('novaSenha') novaSenha: string
     ) {
-        return this.userService.redefinirSenha(token, novaSenha);
+      return this.userService.redefinirSenha(token, novaSenha);
     }
-
 }
