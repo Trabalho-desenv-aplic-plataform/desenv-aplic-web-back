@@ -16,7 +16,7 @@ export class UserService {
     async findByEmail(email: string): Promise<User | undefined> {
         return this.userRepository.findOne({
             where: { email },
-            select: ['id', 'nome', 'email', 'senha'], // Garante que a senha é retornada
+            select: ['id', 'nome', 'email', 'senha'],
         });
     }
 
@@ -31,7 +31,6 @@ export class UserService {
     }
 
     async create(user: User): Promise<User> {
-        // Verifica se o usuário já existe
         const usuarioExiste = await this.userRepository.findOne({ where: { email: user.email } });
     
         if (usuarioExiste) {
@@ -58,34 +57,30 @@ export class UserService {
           throw new NotFoundException('Usuário não encontrado');
         }
       
-        // Gerar um token aleatório
         const token = crypto.randomBytes(32).toString('hex');
         const expirationTime = new Date();
         expirationTime.setHours(expirationTime.getHours() + 1); // Expira em 1 hora
       
-        // Salvar o token e a data de expiração no banco
-        user.resetToken = token;
-        user.resetTokenExpires = expirationTime;
+        user.USR_resetToken = token;
+        user.USR_resetTokenExpires = expirationTime;
       
         await this.userRepository.save(user);
       
-        // Enviar e-mail ou resposta com o token
-        return { message: 'E-mail de recuperação enviado', token };
+        return { message: 'Token de recuperação enviado', token };
     }
 
     async redefinirSenha(token: string, novaSenha: string) {
-        const user = await this.userRepository.findOne({ where: { resetToken: token } });
+        const user = await this.userRepository.findOne({ where: { USR_resetToken: token } });
       
-        if (!user || user.resetTokenExpires < new Date()) {
+        if (!user || user.USR_resetTokenExpires < new Date()) {
           throw new BadRequestException('Token inválido ou expirado');
         }
       
-        // Hash da nova senha
+        
         user.senha = await bcrypt.hash(novaSenha, 10);
       
-        // Remover o token após redefinição
-        user.resetToken = null;
-        user.resetTokenExpires = null;
+        user.USR_resetToken = null;
+        user.USR_resetTokenExpires = null;
       
         await this.userRepository.save(user);
       

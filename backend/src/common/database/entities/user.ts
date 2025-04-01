@@ -18,10 +18,11 @@ export class User {
     @Column({name: "USR_TipoUsuario"})
     tipo: string;
 
-    @Column({ nullable: true })
-    resetToken?: string;
+    // Nova coluna para o token de recuperação de senha
+    @Column({ type: 'varchar', nullable: true })
+    USR_resetToken: string | null;
 
-    // Novo campo: Expiração do token
-    @Column({ type: "timestamp", nullable: true })
-    resetTokenExpires?: Date;
+    // Nova coluna para a data de expiração do token
+    @Column({ type: 'timestamp', nullable: true })
+    USR_resetTokenExpires: Date | null;
 }
