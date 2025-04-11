@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './common/database/database.module';
@@ -8,6 +8,7 @@ import { GruposController } from './grupos/controllers/grupos.controller';
 import { AuthModule } from './auth/modules/auth.module';
 import { ContatosModule } from './contatos/module/contatos.module';
 import { BotModule } from './bot/bot.module';
+import { LoggerMiddleware } from './Logger.Middleware';
 
 @Module({
   imports: [
@@ -21,4 +22,8 @@ import { BotModule } from './bot/bot.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('auth'); 
+  }
+}
